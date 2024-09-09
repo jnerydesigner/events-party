@@ -1,0 +1,6 @@
+{
+    "*.ts": [
+        "yarn eslint 'src/**/*.ts' --fix",
+        "yarn prettier --write 'src/**/*.ts'"
+    ]
+}
