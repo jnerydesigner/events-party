@@ -1,0 +1,59 @@
+services:
+  # This config is for MongoDB v4
+  # It's a Replica Set (required for Prisma Client)
+  mongo:
+    container_name: mongo_events
+    build:
+      context: .
+      args:
+        MONGO_VERSION: 4
+    environment:
+      MONGO_REPLICA_HOST: 127.0.0.1
+      MONGO_REPLICA_PORT: 27017
+      # Use "mongosh" instead of "mongo" for v5+
+      MONGO_COMMAND: "mongo"
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks:
+      - events-network
+    healthcheck:
+      # Use "mongosh" instead of "mongo" for v5+
+      test:
+        [
+          "CMD",
+          "mongo",
+          "admin",
+          "--port",
+          "27017",
+          "--eval",
+          "db.adminCommand('ping').ok",
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+
+  minio:
+    container_name: minio_events
+    image: docker.io/bitnami/minio:2022
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    networks:
+      - events-network
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=12345678
+      - MINIO_DEFAULT_BUCKETS=events
+
+networks:
+  events-network:
+    driver: bridge
+
+volumes:
+  minio_data:
+    driver: local
+
+
