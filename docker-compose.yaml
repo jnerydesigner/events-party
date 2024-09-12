@@ -1,6 +1,5 @@
 services:
-  # This config is for MongoDB v4
-  # It's a Replica Set (required for Prisma Client)
+
   mongo:
     container_name: mongo_events
     build:
@@ -10,7 +9,6 @@ services:
     environment:
       MONGO_REPLICA_HOST: 127.0.0.1
       MONGO_REPLICA_PORT: 27017
-      # Use "mongosh" instead of "mongo" for v5+
       MONGO_COMMAND: "mongo"
     ports:
       - "27017:27017"
@@ -18,7 +16,6 @@ services:
     networks:
       - events-network
     healthcheck:
-      # Use "mongosh" instead of "mongo" for v5+
       test:
         [
           "CMD",

@@ -7,7 +7,7 @@ export class UsersRepositoryPrisma implements UserRepository {
   async save(user: UserEntity): Promise<UserEntity> {
     const usersCreated = await this.prisma.users.create({
       data: {
-        id: user.id,
+        userId: user.id,
         name: user.name,
         email: user.email,
         password: user.password,
@@ -15,7 +15,7 @@ export class UsersRepositoryPrisma implements UserRepository {
     });
 
     return new UserEntity(
-      usersCreated.id,
+      usersCreated.userId,
       usersCreated.name,
       usersCreated.email,
       usersCreated.password,
@@ -24,10 +24,11 @@ export class UsersRepositoryPrisma implements UserRepository {
   async findByEmail(email: string): Promise<UserEntity> {
     throw new Error("Method not implemented.");
   }
-  async findAll(): Promise<UserEntity[]> {
+  async findAll(): Promise<any[]> {
     return this.prisma.users.findMany({
       include: {
         PersonalData: true,
+        ImagesUser: true,
       },
     });
   }

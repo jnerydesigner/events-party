@@ -1,13 +1,14 @@
 import { PersonalDataEntity } from "@domain/entities/personal-data.entity";
 import { PersonalDatarepository } from "@domain/repositories/personal-data.repository";
 import { PrismaService } from "../prisma/prisma.service";
+import { randomUUID } from "node:crypto";
 
 export class PersonalDataPrismaRepository implements PersonalDatarepository {
   constructor(private readonly prisma: PrismaService) {}
-  async createPersonalData(personalData: any): Promise<void> {
+  async createPersonalData(personalData: PersonalDataEntity): Promise<any> {
     const user = await this.prisma.users.findFirst({
       where: {
-        id: personalData.userId,
+        userId: personalData.userId,
       },
     });
 
@@ -15,23 +16,31 @@ export class PersonalDataPrismaRepository implements PersonalDatarepository {
       throw new Error("User not found");
     }
 
-    await this.prisma.personalData.create({
-      data: {
-        user: {
-          connect: {
-            id: personalData.userId,
+    try {
+      const personalUserCreated = await this.prisma.personalData.create({
+        data: {
+          personalId: personalData.id,
+          cep: personalData.cep,
+          city: personalData.city,
+          state: personalData.state,
+          neighborhood: personalData.neighborhood,
+          street: personalData.street,
+          number: personalData.number,
+          complement: personalData.complement,
+          phone: personalData.phone,
+          user: {
+            connect: {
+              userId: user.userId,
+            },
           },
         },
-        cep: personalData.cep,
-        city: personalData.city,
-        state: personalData.state,
-        neighborhood: personalData.neighborhood,
-        street: personalData.street,
-        number: personalData.number,
-        complement: personalData.complement,
-        phone: personalData.phone,
-      },
-    });
+      });
+
+      return personalUserCreated;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
   }
   findPersonalDataByUserId(userId: string): Promise<PersonalDataEntity> {
     throw new Error("Method not implemented.");

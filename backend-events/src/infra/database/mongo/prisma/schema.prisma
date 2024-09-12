@@ -8,20 +8,22 @@ datasource db {
 }
 
 model Users {
-  id           String         @id @default(uuid()) @map("_id")
+  userId       String         @id @default(uuid()) @map("_id")
   name         String
   email        String
   password     String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
   PersonalData PersonalData[]
+  ImagesUser   ImagesUser[]
 
   @@map("users")
 }
 
 model PersonalData {
-  id           String   @id @default(uuid()) @map("_id")
-  user         Users    @relation(fields: [id], references: [id])
+  personalId   String   @id @default(uuid()) @map("_id")
+  userId       String   @map("user_id")
+  user         Users    @relation(fields: [userId], references: [userId])
   phone        String
   cep          String
   street       String
@@ -30,8 +32,19 @@ model PersonalData {
   neighborhood String
   city         String
   state        String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("personal_data")
+}
+
+model ImagesUser {
+  imageId   String   @id @default(uuid()) @map("_id")
+  user      Users    @relation(fields: [userId], references: [userId])
+  url       String
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("images_user")
 }

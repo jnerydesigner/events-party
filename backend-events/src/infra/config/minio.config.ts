@@ -4,4 +4,5 @@ export const minioConfig = {
   MINIO_ACCESSKEY: process.env.MINIO_ACCESS_KEY,
   MINIO_SECRETKEY: process.env.MINIO_SECRET_KEY,
   MINIO_BUCKET: process.env.MINIO_BUCKET_NAME,
+  MINIO_ENDPOINT_FULL: `http://localhost:9000`,
 };
