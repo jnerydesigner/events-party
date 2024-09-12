@@ -38,6 +38,7 @@
     "canvas": "^2.11.2",
     "nestjs-minio-client": "^2.2.0",
     "node-fecth": "^2.6.1",
+    "path-to-regexp": "3.3.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "sharp": "^0.33.5"
